@@ -6,7 +6,7 @@ module load mpi/hpcx-pmix-2.18
 export NETCDF=/shared/dependencies/hpcx-pmix/netcdf
 export PNETCDF=/shared/dependencies/hpcx-pmix/pnetcdf
 export PIO=/shared/dependencies/hpcx-pmix/pio
-export GRIB2=/shared/grib2
+export GRIB2=/shared/dependencies/grib2
 
 export PATH=$PATH:$NETCDF/bin:$PNETCDF/bin:$PIO/bin:$GRIB2/bin
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$NETCDF/lib:$PNETCDF/lib:$PIO/lib:$GRIB2/lib
