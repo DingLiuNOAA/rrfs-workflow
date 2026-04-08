@@ -15,17 +15,18 @@
         ignore = all
 [submodule "sorc/UPP"]
 	path = sorc/UPP
-	url = https://github.com/NOAA-EMC/UPP
-        branch = develop
+	url = https://github.com/DingLiuNOAA/UPP
+        branch = reforecast
         ignore = all
 [submodule "sorc/MPASSIT"]
 	path = sorc/MPASSIT
-	url = https://github.com/NOAA-GSL/MPASSIT.git
-        branch = gsl/develop
+	url = https://github.com/DingLiuNOAA/MPASSIT.git
+        branch = reforecast
         ignore = all
 [submodule "sorc/RRFS_UTILS"]
 	path = sorc/RRFS_UTILS
-	url = https://github.com/NOAA-GSL/RRFS_UTILS
+	url = https://github.com/DingLiuNOAA/RRFS_UTILS
+        branch = reforecast
         ignore = all
 [submodule "ush/wxflow"]
 	path = ush/wxflow
