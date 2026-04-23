@@ -6,44 +6,53 @@ rundir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 HOMErrfs="$(dirname "$rundir")"
 COMPILER=${COMPILER:-gnu}
 
-#source "${HOMErrfs}/workflow/tools/detect_machine.sh"
+source "${HOMErrfs}/workflow/tools/detect_machine.sh"
 #source "${HOMErrfs}/workflow/tools/init.sh"
 
 EXEC="${HOMErrfs}/sorc/WPS/ungrib/src/ungrib.exe"
 
-#if [[ "${MACHINE}" == "wcoss2" ]]; then
-#  BUILD_VERSION_FILE="${HOMErrfs}/versions/build.ver"
-#  if [[ -f "${BUILD_VERSION_FILE}" ]]; then
-#    source "${BUILD_VERSION_FILE}"
-#  fi
-#fi
+if [[ "${MACHINE}" == "wcoss2" ]]; then
+  BUILD_VERSION_FILE="${HOMErrfs}/versions/build.ver"
+  if [[ -f "${BUILD_VERSION_FILE}" ]]; then
+    source "${BUILD_VERSION_FILE}"
+  fi
+fi
 
-#set +x
-#module purge                      
-#module use "${HOMErrfs}/modulefiles"
-#module load "rrfs/${MACHINE}.${COMPILER}"
-#module load netcdf
-#module list
-#set -x
+set +x
+module purge                      
+module use "${HOMErrfs}/modulefiles"
+module load "rrfs/${MACHINE}.${COMPILER}"
+module load netcdf-c
+module load netcdf-fortran
+module list
+set -x
 
 echo "compiling WPS..."
 cd "${HOMErrfs}/sorc/WPS" || exit 1
 ./clean
-#if [[ "${MACHINE}" == "wcoss2" ]]; then
-#  cp ../_workaround_/WPS/configure.wps_wcoss2 configure.wps
-#elif [[ "${MACHINE}" == "gaeac6" ]] || [[ "${MACHINE}" == "orion" || "${MACHINE}" == "hercules" || "${MACHINE}" == "ursa" ]]; then
-#  mkdir -p .tmpNETCDFDIR/include
-#  mkdir -p .tmpNETCDFDIR/lib
-#  ln -snf "${netcdf_c_ROOT}"/include/* .tmpNETCDFDIR/include
-#  ln -snf "${netcdf_c_ROOT}"/lib/* .tmpNETCDFDIR/lib
-#  ln -snf "${netcdf_fortran_ROOT}"/include/* .tmpNETCDFDIR/include
-#  ln -snf "${netcdf_fortran_ROOT}"/lib/* .tmpNETCDFDIR/lib
-#  export NETCDF=${HOMErrfs}/sorc/WPS/.tmpNETCDFDIR
-#  module load jasper/2.0.32
-#  echo "19" | ./configure --nowrf
-#else
-echo "1" | ./configure --nowrf
-#fi
+if [[ "${MACHINE}" == "wcoss2" ]]; then
+  cp ../_workaround_/WPS/configure.wps_wcoss2 configure.wps
+elif [[ "${MACHINE}" == "gaeac6" ]] || [[ "${MACHINE}" == "orion" || "${MACHINE}" == "hercules" || "${MACHINE}" == "ursa" ]]; then
+  mkdir -p .tmpNETCDFDIR/include
+  mkdir -p .tmpNETCDFDIR/lib
+  ln -snf "${netcdf_c_ROOT}"/include/* .tmpNETCDFDIR/include
+  ln -snf "${netcdf_c_ROOT}"/lib/* .tmpNETCDFDIR/lib
+  ln -snf "${netcdf_fortran_ROOT}"/include/* .tmpNETCDFDIR/include
+  ln -snf "${netcdf_fortran_ROOT}"/lib/* .tmpNETCDFDIR/lib
+  export NETCDF=${HOMErrfs}/sorc/WPS/.tmpNETCDFDIR
+  module load jasper/2.0.32
+  echo "19" | ./configure --nowrf
+elif [[ "${MACHINE}" == "azure" ]]; then
+  mkdir -p .tmpNETCDFDIR/include
+  mkdir -p .tmpNETCDFDIR/lib
+  ln -snf "${netcdf_c_ROOT}"/include/* .tmpNETCDFDIR/include
+  ln -snf "${netcdf_c_ROOT}"/lib/* .tmpNETCDFDIR/lib
+  ln -snf "${netcdf_fortran_ROOT}"/include/* .tmpNETCDFDIR/include
+  ln -snf "${netcdf_fortran_ROOT}"/lib/* .tmpNETCDFDIR/lib
+  export NETCDF=${HOMErrfs}/sorc/WPS/.tmpNETCDFDIR
+  module load jasper/4.2.4
+  echo "1" | ./configure --nowrf
+fi
 ./compile ungrib
 
 #if [[ "${MACHINE}" == "gaeac6" ]] || [[ "${MACHINE}" == "orion" || "${MACHINE}" == "hercules" || "${MACHINE}" == "ursa" ]]; then
@@ -51,7 +60,7 @@ cd ungrib/src || exit 1
 gfortran -o ungrib.exe  misc_definitions_module.o debug_cio.o module_debug.o module_stringutil.o \
   table.o module_datarray.o gridinfo.o new_storage.o filelist.o ungrib.o output.o rrpr.o \
   rd_grib1.o file_delete.o datint.o rd_grib2.o ./ngl/w3/libw3.a ./ngl/g2/libg2_4.a \
-  -L"${GRIB2}/lib" -ljasper -L"${GRIB2}/lib" -lpng -lz libpgu.a
+  -L"${jasper_ROOT}/lib" -ljasper -L"${libpng_ROOT}/lib64" -lpng -lz libpgu.a
 #fi
 
 mkdir -p "${HOMErrfs}/exec"

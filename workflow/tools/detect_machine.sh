@@ -39,6 +39,9 @@ case $(hostname -f) in
   login0[1-2].expanse.sdsc.edu) MACHINE=expanse ;; ### expanse1-2
 
   discover3[1-5].prv.cube) MACHINE=discover ;; ### discover31-35
+
+  *scheduler*) MACHINE=azure ;; ### native azure cyclecloud
+
   *) MACHINE=UNKNOWN ;;  # Unknown platform
 esac
 
@@ -89,6 +92,9 @@ if [[ "${MACHINE}" == "UNKNOWN" ]]; then
   elif [[ -d /data/prod ]]; then
     # We are on SSEC's S4
     MACHINE=s4
+  elif [[ -d /shared ]]; then
+    # We are on native Azure Cyclecloud
+    MACHINE=azure
   else
     echo WARNING: UNKNOWN PLATFORM 1>&2
   fi

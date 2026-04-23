@@ -7,7 +7,7 @@ HOMErrfs="$(dirname "$rundir")"
 
 module purge
 source "${HOMErrfs}/workflow/tools/detect_machine.sh"
-source "${HOMErrfs}/workflow/tools/init.sh"
+#source "${HOMErrfs}/workflow/tools/init.sh"
 
 EXEC="${HOMErrfs}/sorc/MPASSIT/bin/mpassit"
 
@@ -15,7 +15,7 @@ rm -rf "${HOMErrfs}/sorc/MPASSIT/build"
 rm -rf "${HOMErrfs}/sorc/MPASSIT/bin"
 
 cd "${HOMErrfs}/sorc/MPASSIT" || exit 1
-./build.sh
+./build.sh $MACHINE gnu false
 
 mkdir -p "${HOMErrfs}/exec"
 echo "copy ${EXEC} to ../exec/mpassit.x"
